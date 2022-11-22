@@ -1,0 +1,10 @@
+# conda env create|update -f environment.yml
+name: data-process
+channels:
+- defaults
+dependencies:
+- python=3.10.*
+- pip=22.*
+- pip:
+  - -r requirements.txt
+  - --editable=src/.
