@@ -1,10 +1,9 @@
-import numpy as np
 import pandas as pd
 
 from itertools import chain
 
 from sklearn.base import BaseEstimator, TransformerMixin
-from sklearn.preprocessing import OneHotEncoder
+from sklearn.compose import ColumnTransformer
 
 class AssignTransformer(BaseEstimator, TransformerMixin):
     """
@@ -121,3 +120,15 @@ class AggregateTransformer(BaseEstimator, TransformerMixin):
             + [X[self.columns_rest].groupby(self.index).first()],
             axis=1
         )
+
+
+class PandasColumnTransformer(ColumnTransformer):
+    """
+    Same functionality as sklearn's ColumnTransformer, but returns a DataFrame
+    as an output.
+    """
+    def _hstack(self, Xs):
+        if all(isinstance(x, pd.DataFrame) for x in Xs):
+            return pd.concat(Xs, axis='columns', copy=False)
+        else:
+            return super()._hstack(Xs)
